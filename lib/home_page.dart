@@ -23,6 +23,8 @@ class _HomePageState extends State<HomePage> {
   Map<String, dynamic>? heroData;
   bool isLoading = true;
 
+  String currentPage = "Home"; // Track the current page for highlighting
+
   @override
   void initState() {
     super.initState();
@@ -104,66 +106,152 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(title: const Text("Hero of the Day")),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+  child: ListView(
+    padding: EdgeInsets.zero,
+    children: [
+      const DrawerHeader(
+        decoration: BoxDecoration(color: Colors.blue),
+        child: Text("Navigation", style: TextStyle(color: Colors.white)),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0), // Add horizontal margins
+        child: Column(
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text("Navigation", style: TextStyle(color: Colors.white)),
+            Container(
+              decoration: BoxDecoration(
+                color: currentPage == "Home"
+                    ? const Color(0x1F661FFF) // 12% opacity background
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(3), // Add border radius
+              ),
+              child: ListTile(
+                leading: const Icon(Icons.home), // Add Home icon
+                title: const Text("Home"),
+                textColor: currentPage == "Home"
+                    ? const Color(0xFF661FFF) // 100% opacity text color
+                    : null,
+                onTap: () {
+                  setState(() {
+                    currentPage = "Home";
+                  });
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
             ),
-            ListTile(
-              title: const Text("Home Page"),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-              },
+            const SizedBox(height: 8), // Add spacing between items
+            Container(
+              decoration: BoxDecoration(
+                color: currentPage == "Battle"
+                    ? const Color(0x1F661FFF) // 12% opacity background
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(3), // Add border radius
+              ),
+              child: ListTile(
+                leading: const Icon(Icons.sports_martial_arts), // Add Battle icon
+                title: const Text("Battle"),
+                textColor: currentPage == "Battle"
+                    ? const Color(0xFF661FFF) // 100% opacity text color
+                    : null,
+                onTap: () {
+                  setState(() {
+                    currentPage = "Battle";
+                  });
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BattlePage(apiKey: widget.apiKey),
+                    ),
+                  );
+                },
+              ),
             ),
-            ListTile(
-              title: const Text("Battle Page"),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BattlePage(apiKey: widget.apiKey),
-                  ),
-                );
-              },
+            const SizedBox(height: 8), // Add spacing between items
+            Container(
+              decoration: BoxDecoration(
+                color: currentPage == "Search"
+                    ? const Color(0x1F661FFF) // 12% opacity background
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(3), // Add border radius
+              ),
+              child: ListTile(
+                leading: const Icon(Icons.search), // Add Search icon
+                title: const Text("Search"),
+                textColor: currentPage == "Search"
+                    ? const Color(0xFF661FFF) // 100% opacity text color
+                    : null,
+                onTap: () {
+                  setState(() {
+                    currentPage = "Search";
+                  });
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchPage(apiKey: widget.apiKey),
+                    ),
+                  );
+                },
+              ),
             ),
-            ListTile(
-              title: const Text("Search Page"),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SearchPage(apiKey: widget.apiKey),
-                  ),
-                );
-              },
+            const SizedBox(height: 8), // Add spacing between items
+            Container(
+              decoration: BoxDecoration(
+                color: currentPage == "Favorites"
+                    ? const Color(0x1F661FFF) // 12% opacity background
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(3), // Add border radius
+              ),
+              child: ListTile(
+                leading: const Icon(Icons.favorite), // Add Favorites icon
+                title: const Text("Favorites"),
+                textColor: currentPage == "Favorites"
+                    ? const Color(0xFF661FFF) // 100% opacity text color
+                    : null,
+                onTap: () {
+                  setState(() {
+                    currentPage = "Favorites";
+                  });
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FavoritePage(apiKey: widget.apiKey),
+                    ),
+                  );
+                },
+              ),
             ),
-            ListTile(
-              title: const Text("Favorites Page"),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FavoritePage(apiKey: widget.apiKey),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text("About Page"),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AboutPage(apiKey: widget.apiKey),
-                  ),
-                );
-              },
+            const SizedBox(height: 8), // Add spacing between items
+            Container(
+              decoration: BoxDecoration(
+                color: currentPage == "About"
+                    ? const Color(0x1F661FFF) // 12% opacity background
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(3), // Add border radius
+              ),
+              child: ListTile(
+                leading: const Icon(Icons.info), // Add About icon
+                title: const Text("About"),
+                textColor: currentPage == "About"
+                    ? const Color(0xFF661FFF) // 100% opacity text color
+                    : null,
+                onTap: () {
+                  setState(() {
+                    currentPage = "About";
+                  });
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AboutPage(apiKey: widget.apiKey),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
       ),
+    ],
+  ),
+),
       body:
           isLoading
               ? const Center(child: CircularProgressIndicator())

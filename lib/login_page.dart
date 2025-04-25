@@ -43,12 +43,12 @@ class _LoginPageState extends State<LoginPage> {
         }
       } else {
         setState(() {
-          _errorText = "Invalid API key.";
+          _errorText = 'Invalid API Key';
         });
       }
     } catch (e) {
       setState(() {
-        _errorText = "An error occurred. Check your internet or API key.";
+        _errorText = 'An error occurred. Please try again.';
       });
     } finally {
       setState(() {
@@ -60,27 +60,48 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login with API Key")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _apiKeyController,
-              decoration: InputDecoration(
-                labelText: "Enter Hero API Key",
-                errorText: _errorText,
-                border: const OutlineInputBorder(),
+      appBar: AppBar(
+        title: const Text('Login'),
+      ),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          margin: const EdgeInsets.symmetric(horizontal: 24.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 3),
               ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _isLoading ? null : _validateApiKey,
-              child: _isLoading
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 300.0, // Adjusted width
+                child: TextField(
+                  controller: _apiKeyController,
+                  decoration: InputDecoration(
+                    labelText: 'API Key',
+                    errorText: _errorText,
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              _isLoading
                   ? const CircularProgressIndicator()
-                  : const Text("Login"),
-            ),
-          ],
+                  : ElevatedButton(
+                      onPressed: _validateApiKey,
+                      child: const Text('Login'),
+                    ),
+            ],
+          ),
         ),
       ),
     );
