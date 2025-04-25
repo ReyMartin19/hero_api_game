@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'database_helper.dart';
-import 'home_page.dart';
-import 'battle_page.dart';
-import 'search_page.dart';
-import 'about_page.dart';
+import 'drawer_widget.dart'; // Import the AppDrawer
 
 class FavoritePage extends StatefulWidget {
   final String apiKey;
@@ -16,6 +13,8 @@ class FavoritePage extends StatefulWidget {
 
 class _FavoritePageState extends State<FavoritePage> {
   List<Map<String, dynamic>> _favorites = [];
+
+  String currentPage = "Home"; // Track the current page for highlighting
 
   @override
   void initState() {
@@ -57,6 +56,7 @@ class _FavoritePageState extends State<FavoritePage> {
       debugPrint('Database now contains ${updatedFavorites.length} favorites');
 
       if (updatedFavorites.length == _favorites.length) {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Hero removed successfully!")),
         );
@@ -68,6 +68,7 @@ class _FavoritePageState extends State<FavoritePage> {
     } catch (e) {
       debugPrint("Deletion error: $e");
       ScaffoldMessenger.of(
+        // ignore: use_build_context_synchronously
         context,
       ).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
       // Reload from database on error
@@ -134,6 +135,7 @@ class _FavoritePageState extends State<FavoritePage> {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
+                        // ignore: deprecated_member_use
                         color: Colors.blue.withOpacity(
                           0.6,
                         ), // Glowing blue color
@@ -207,84 +209,9 @@ class _FavoritePageState extends State<FavoritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Favorite Heroes")),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text(
-                "Navigation",
-                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-              ),
-            ),
-            ListTile(
-              title: const Text(
-                "Home Page",
-                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-              ),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomePage(apiKey: widget.apiKey),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text(
-                "Battle Page",
-                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-              ),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BattlePage(apiKey: widget.apiKey),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text(
-                "Search Page",
-                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-              ),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SearchPage(apiKey: widget.apiKey),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text(
-                "Favorites Page",
-                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text(
-                "About Page",
-                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-              ),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AboutPage(apiKey: widget.apiKey),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+      drawer: AppDrawer(
+        currentPage: currentPage,
+        apiKey: widget.apiKey,
       ),
       body:
           _favorites.isEmpty

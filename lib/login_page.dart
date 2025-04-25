@@ -37,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
         // Proceed to Home Page
         if (context.mounted) {
           Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
             context,
             MaterialPageRoute(builder: (context) => HomePage(apiKey: apiKey)),
           );
@@ -72,6 +73,7 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.circular(12.0),
             boxShadow: [
               BoxShadow(
+                // ignore: deprecated_member_use
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 2,
                 blurRadius: 5,

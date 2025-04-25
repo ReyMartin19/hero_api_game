@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:math';
-import 'battle_page.dart'; // Import the BattlePage
-import 'search_page.dart'; // Add this import
-import 'favorite_page.dart'; // Add this import
-import 'about_page.dart'; // Add this import
+import 'drawer_widget.dart'; // Import the AppDrawer
 
 class HomePage extends StatefulWidget {
   final String apiKey;
@@ -105,153 +102,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Hero of the Day")),
-      drawer: Drawer(
-  child: ListView(
-    padding: EdgeInsets.zero,
-    children: [
-      const DrawerHeader(
-        decoration: BoxDecoration(color: Colors.blue),
-        child: Text("Navigation", style: TextStyle(color: Colors.white)),
+      drawer: AppDrawer(
+        currentPage: currentPage,
+        apiKey: widget.apiKey,
       ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0), // Add horizontal margins
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: currentPage == "Home"
-                    ? const Color(0x1F661FFF) // 12% opacity background
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(3), // Add border radius
-              ),
-              child: ListTile(
-                leading: const Icon(Icons.home), // Add Home icon
-                title: const Text("Home"),
-                textColor: currentPage == "Home"
-                    ? const Color(0xFF661FFF) // 100% opacity text color
-                    : null,
-                onTap: () {
-                  setState(() {
-                    currentPage = "Home";
-                  });
-                  Navigator.pop(context); // Close the drawer
-                },
-              ),
-            ),
-            const SizedBox(height: 8), // Add spacing between items
-            Container(
-              decoration: BoxDecoration(
-                color: currentPage == "Battle"
-                    ? const Color(0x1F661FFF) // 12% opacity background
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(3), // Add border radius
-              ),
-              child: ListTile(
-                leading: const Icon(Icons.sports_martial_arts), // Add Battle icon
-                title: const Text("Battle"),
-                textColor: currentPage == "Battle"
-                    ? const Color(0xFF661FFF) // 100% opacity text color
-                    : null,
-                onTap: () {
-                  setState(() {
-                    currentPage = "Battle";
-                  });
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BattlePage(apiKey: widget.apiKey),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 8), // Add spacing between items
-            Container(
-              decoration: BoxDecoration(
-                color: currentPage == "Search"
-                    ? const Color(0x1F661FFF) // 12% opacity background
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(3), // Add border radius
-              ),
-              child: ListTile(
-                leading: const Icon(Icons.search), // Add Search icon
-                title: const Text("Search"),
-                textColor: currentPage == "Search"
-                    ? const Color(0xFF661FFF) // 100% opacity text color
-                    : null,
-                onTap: () {
-                  setState(() {
-                    currentPage = "Search";
-                  });
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchPage(apiKey: widget.apiKey),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 8), // Add spacing between items
-            Container(
-              decoration: BoxDecoration(
-                color: currentPage == "Favorites"
-                    ? const Color(0x1F661FFF) // 12% opacity background
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(3), // Add border radius
-              ),
-              child: ListTile(
-                leading: const Icon(Icons.favorite), // Add Favorites icon
-                title: const Text("Favorites"),
-                textColor: currentPage == "Favorites"
-                    ? const Color(0xFF661FFF) // 100% opacity text color
-                    : null,
-                onTap: () {
-                  setState(() {
-                    currentPage = "Favorites";
-                  });
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FavoritePage(apiKey: widget.apiKey),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 8), // Add spacing between items
-            Container(
-              decoration: BoxDecoration(
-                color: currentPage == "About"
-                    ? const Color(0x1F661FFF) // 12% opacity background
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(3), // Add border radius
-              ),
-              child: ListTile(
-                leading: const Icon(Icons.info), // Add About icon
-                title: const Text("About"),
-                textColor: currentPage == "About"
-                    ? const Color(0xFF661FFF) // 100% opacity text color
-                    : null,
-                onTap: () {
-                  setState(() {
-                    currentPage = "About";
-                  });
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AboutPage(apiKey: widget.apiKey),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  ),
-),
       body:
           isLoading
               ? const Center(child: CircularProgressIndicator())
@@ -270,6 +124,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
+                          // ignore: deprecated_member_use
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 2,
                           blurRadius: 5,
@@ -309,6 +164,7 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: BorderRadius.circular(8),
                                   boxShadow: [
                                     BoxShadow(
+                                      // ignore: deprecated_member_use
                                       color: Colors.grey.withOpacity(0.5),
                                       spreadRadius: 2,
                                       blurRadius: 5,
@@ -328,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      "Work: ${heroData!['work']['occupation'] ?? 'N/A'}",
+                                      "Work: {heroData!['work']['occupation'] ?? 'N/A'}",
                                       style: const TextStyle(
                                         fontSize: 18,
                                         fontStyle: FontStyle.italic,
@@ -348,6 +204,7 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: BorderRadius.circular(8),
                                   boxShadow: [
                                     BoxShadow(
+                                      // ignore: deprecated_member_use
                                       color: Colors.grey.withOpacity(0.5),
                                       spreadRadius: 2,
                                       blurRadius: 5,

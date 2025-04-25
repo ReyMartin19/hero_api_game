@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'home_page.dart'; // Add this import
-import 'battle_page.dart'; // Add this import
-import 'favorite_page.dart'; // Add this import
 import 'database_helper.dart'; // Add this import
-import 'about_page.dart'; // Add this import
+import 'drawer_widget.dart'; // Import the AppDrawer
 
 class SearchPage extends StatefulWidget {
   final String apiKey;
@@ -20,6 +17,8 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _heroes = [];
   bool _isLoading = false;
+
+  String currentPage = "Home"; // Track the current page for highlighting
 
   Future<void> _searchHeroes(String query) async {
     if (query.isEmpty) return;
@@ -65,6 +64,7 @@ class _SearchPageState extends State<SearchPage> {
     ); // Compare by hero ID
 
     if (isAlreadyFavorite) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("${hero['name']} is already in favorites!")),
       );
@@ -73,6 +73,7 @@ class _SearchPageState extends State<SearchPage> {
 
     // Add the hero to favorites if not already added
     await DatabaseHelper.instance.addFavoriteHero(hero);
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("${hero['name']} added to favorites!")),
     );
@@ -166,66 +167,9 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Search Heroes")),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text("Navigation", style: TextStyle(color: Colors.white)),
-            ),
-            ListTile(
-              title: const Text("Home Page"),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomePage(apiKey: widget.apiKey),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text("Battle Page"),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BattlePage(apiKey: widget.apiKey),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text("Search Page"),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-              },
-            ),
-            ListTile(
-              title: const Text("Favorites Page"),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FavoritePage(apiKey: widget.apiKey),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text("About Page"),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AboutPage(apiKey: widget.apiKey),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+      drawer: AppDrawer(
+        currentPage: currentPage,
+        apiKey: widget.apiKey,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
