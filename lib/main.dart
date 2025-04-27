@@ -1,22 +1,26 @@
-import 'package:flutter/material.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart'; // Import FFI library
-import 'login_page.dart';
-import 'home_page.dart';
-import 'database_helper.dart';
-import 'battle_page.dart'; // Import BattlePage
+   import 'dart:io';
+   import 'package:flutter/material.dart';
+   import 'package:sqflite/sqflite.dart';
+   import 'package:sqflite_common_ffi/sqflite_ffi.dart'; // Import FFI library for desktop
+   import 'login_page.dart';
+   import 'home_page.dart';
+   import 'database_helper.dart';
+   import 'battle_page.dart'; // Import BattlePage
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+   void main() async {
+     WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize the sqflite database factory for FFI support
-  databaseFactory = databaseFactoryFfi;
+     // Initialize the database factory based on the platform
+     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+       databaseFactory = databaseFactoryFfi; // Use FFI for desktop
+     }
 
-  // Check for saved API key
-  final apiKey = await DatabaseHelper.instance.getApiKey();
+     // Check for saved API key
+     final apiKey = await DatabaseHelper.instance.getApiKey();
 
-  // If the API key is null, direct the user to the login page
-  runApp(HeroApiGameApp(apiKey: apiKey));
-}
+     // If the API key is null, direct the user to the login page
+     runApp(HeroApiGameApp(apiKey: apiKey));
+   }
 
 class HeroApiGameApp extends StatelessWidget {
   final String? apiKey;
@@ -48,3 +52,4 @@ class HeroApiGameApp extends StatelessWidget {
     );
   }
 }
+  

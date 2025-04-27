@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'database_helper.dart';
 import 'home_page.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -60,27 +59,58 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login with API Key")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _apiKeyController,
-              decoration: InputDecoration(
-                labelText: "Enter Hero API Key",
-                errorText: _errorText,
-                border: const OutlineInputBorder(),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 370),
+            child: Card(
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Yo-Gi-Oh",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const SizedBox(height: 8),
+                    const Text(
+                      "Battle with legendary heroes, collect cards, and become the ultimate champion in Yo-Gi-Oh Hero Game!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 15, color: Colors.black54),
+                    ),
+                    const SizedBox(height: 24),
+                    TextField(
+                      controller: _apiKeyController,
+                      decoration: InputDecoration(
+                        labelText: "Enter Hero API Key",
+                        errorText: _errorText,
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _isLoading ? null : _validateApiKey,
+                      child:
+                          _isLoading
+                              ? const CircularProgressIndicator()
+                              : const Text("Login"),
+                    ),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _isLoading ? null : _validateApiKey,
-              child: _isLoading
-                  ? const CircularProgressIndicator()
-                  : const Text("Login"),
-            ),
-          ],
+          ),
         ),
       ),
     );
